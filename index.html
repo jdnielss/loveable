@@ -141,11 +141,34 @@
     position: relative;
     z-index: 1;
   }
+
+  .sticker-cat {
+    position: absolute;
+    top: -18px;
+    right: -18px;
+    font-size: 44px;
+    background: white;
+    border-radius: 50%;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 16px rgba(255,93,162,0.35);
+    transform: rotate(12deg);
+    animation: stickerWiggle 2.4s ease-in-out infinite;
+    z-index: 2;
+  }
+  @keyframes stickerWiggle {
+    0%, 100% { transform: rotate(12deg); }
+    50% { transform: rotate(-6deg); }
+  }
 </style>
 </head>
 <body>
 
 <div class="card" id="card">
+  <div class="sticker-cat">🐱</div>
   <div class="prompt">
     <div class="emoji-top">💗</div>
     <h1>Buat <span id="namaKamu">Kamu</span>...</h1>
