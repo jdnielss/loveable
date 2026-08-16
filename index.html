@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nembak Kamu 💌</title>
+<style>
+  :root {
+    --pink: #ffd6e8;
+    --pink2: #ffb6d9;
+    --lavender: #e6d9ff;
+    --deep: #ff5da2;
+    --text: #6b4664;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--pink) 0%, var(--lavender) 100%);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ---- NAMA: ganti di sini ---- */
+  /* Cari elemen #namaKamu dan #namaAku di HTML bawah buat edit nama */
+
+  .heart {
+    position: fixed;
+    top: -10%;
+    font-size: 24px;
+    color: var(--pink2);
+    animation: fall linear infinite;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+  }
+  @keyframes fall {
+    to { transform: translateY(110vh) rotate(360deg); opacity: 0.2; }
+  }
+
+  .card {
+    position: relative;
+    z-index: 1;
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(6px);
+    border-radius: 24px;
+    padding: 48px 36px;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(255,93,162,0.25);
+    animation: pop 0.6s ease;
+  }
+  @keyframes pop {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .emoji-top { font-size: 48px; margin-bottom: 8px; }
+
+  h1 {
+    color: var(--deep);
+    font-size: 1.6rem;
+    margin: 0 0 8px;
+  }
+
+  p.msg {
+    color: var(--text);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin: 0 0 28px;
+  }
+
+  .btn-row {
+    position: relative;
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    min-height: 60px;
+  }
+
+  button {
+    border: none;
+    border-radius: 999px;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s ease, font-size 0.2s ease, padding 0.2s ease;
+  }
+
+  #yesBtn {
+    background: var(--deep);
+    color: white;
+    box-shadow: 0 8px 20px rgba(255,93,162,0.4);
+  }
+  #yesBtn:hover { transform: scale(1.08); }
+
+  #noBtn {
+    background: #fff;
+    color: var(--text);
+    border: 2px solid var(--pink2);
+    position: relative;
+  }
+
+  .result {
+    display: none;
+    z-index: 1;
+    position: relative;
+  }
+  .result.show { display: block; }
+  .card.answered .prompt { display: none; }
+
+  .result h2 {
+    color: var(--deep);
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+  }
+  .result p { color: var(--text); margin: 0; }
+
+  .confetti {
+    position: fixed;
+    top: -10%;
+    font-size: 20px;
+    pointer-events: none;
+    z-index: 5;
+    animation: confettiFall 2.2s ease-in forwards;
+  }
+  @keyframes confettiFall {
+    to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  footer {
+    margin-top: 20px;
+    font-size: 0.75rem;
+    color: #b98aa8;
+    position: relative;
+    z-index: 1;
+  }
+</style>
+</head>
+<body>
+
+<div class="card" id="card">
+  <div class="prompt">
+    <div class="emoji-top">💗</div>
+    <h1>Buat <span id="namaKamu">Kamu</span>...</h1>
+    <p class="msg">
+      Halo <span id="namaKamu2">Kamu</span>, dari <span id="namaAku">Aku</span>.<br>
+      Aku suka sama kamu. Udah lama mau bilang, baru sempet sekarang.<br><br>
+      <strong>Mau nggak jadi pacar aku?</strong>
+    </p>
+    <div class="btn-row">
+      <button id="yesBtn" onclick="sayYes()">Iya, mau!</button>
+      <button id="noBtn">Nggak dulu</button>
+    </div>
+  </div>
+
+  <div class="result" id="result">
+    <div class="emoji-top">🎉</div>
+    <h2>Yeay!! 🥰</h2>
+    <p>Makasih udah bilang iya. Sekarang resmi jadi pacar aku ya 💌</p>
+  </div>
+
+  <footer>dibuat dengan 💗 khusus buat kamu</footer>
+</div>
+
+<script>
+  // ---- EDIT NAMA DI SINI ----
+  const namaKamu = "Kamu"; // ganti jadi nama pacar
+  const namaAku = "Aku";   // ganti jadi nama kamu
+  document.getElementById('namaKamu').textContent = namaKamu;
+  document.getElementById('namaKamu2').textContent = namaKamu;
+  document.getElementById('namaAku').textContent = namaAku;
+
+  // Falling hearts background
+  const heartChars = ['💗','💕','💖','💓','💞'];
+  function spawnHeart() {
+    const h = document.createElement('div');
+    h.className = 'heart';
+    h.textContent = heartChars[Math.floor(Math.random() * heartChars.length)];
+    h.style.left = Math.random() * 100 + 'vw';
+    h.style.fontSize = (16 + Math.random() * 20) + 'px';
+    h.style.animationDuration = (6 + Math.random() * 6) + 's';
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 13000);
+  }
+  setInterval(spawnHeart, 400);
+  for (let i = 0; i < 8; i++) setTimeout(spawnHeart, i * 200);
+
+  // Jail "Nggak" button
+  const noBtn = document.getElementById('noBtn');
+  const btnRow = document.querySelector('.btn-row');
+  const yesBtn = document.getElementById('yesBtn');
+  let dodgeCount = 0;
+  let yesScale = 1;
+
+  function moveNoButton() {
+    const rowRect = btnRow.getBoundingClientRect();
+    const btnW = noBtn.offsetWidth;
+    const btnH = noBtn.offsetHeight;
+    const maxX = rowRect.width - btnW;
+    const maxY = rowRect.height - btnH;
+    const x = Math.random() * Math.max(maxX, 0);
+    const y = Math.random() * Math.max(maxY, 0) - (maxY / 2);
+    noBtn.style.position = 'absolute';
+    noBtn.style.left = x + 'px';
+    noBtn.style.top = y + 'px';
+
+    dodgeCount++;
+    yesScale = Math.min(1 + dodgeCount * 0.08, 2.2);
+    yesBtn.style.transform = `scale(${yesScale})`;
+    yesBtn.style.padding = (14 + dodgeCount) + 'px ' + (28 + dodgeCount * 2) + 'px';
+
+    const shrink = Math.max(1 - dodgeCount * 0.05, 0.5);
+    noBtn.style.fontSize = (1 * shrink) + 'rem';
+    noBtn.style.padding = (14 * shrink) + 'px ' + (28 * shrink) + 'px';
+  }
+
+  noBtn.addEventListener('mouseenter', moveNoButton);
+  noBtn.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    moveNoButton();
+  }, { passive: false });
+  noBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    moveNoButton();
+  });
+
+  function sayYes() {
+    document.getElementById('card').classList.add('answered');
+    document.getElementById('result').classList.add('show');
+    burstConfetti();
+  }
+
+  function burstConfetti() {
+    const emojis = ['🎉','💗','✨','💕','🎊'];
+    for (let i = 0; i < 40; i++) {
+      setTimeout(() => {
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        c.style.left = Math.random() * 100 + 'vw';
+        c.style.fontSize = (16 + Math.random() * 18) + 'px';
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 2300);
+      }, i * 40);
+    }
+  }
+</script>
+
+</body>
+</html>
